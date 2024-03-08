@@ -1,7 +1,8 @@
 package com.example.searchify.data.remote
 
-import com.example.searchify.model.ServerAuthData
-import com.example.searchify.network.MusicApi
+import com.example.searchify.data.model.ServerAuthData
+import com.example.searchify.data.model.ServerSearchResult
+import com.example.searchify.data.network.MusicApi
 import com.example.searchify.utils.CONTENT_TYPE_VALUE_API
 import com.example.searchify.utils.Resource
 import com.example.searchify.utils.SPOTIFY_CLIENT_ID
@@ -20,17 +21,22 @@ class MusicDataSource @Inject constructor(
     searchQuery: String,
     offset: Int,
     limit: Int
-  ): Resource<Unit> {
+  ): Resource<ServerSearchResult?> {
     val tokenRes = fetchAccessToken()
 
     if (tokenRes is Resource.Success && tokenRes.data?.accessToken != null) {
-      musicApi.searchForMusic(
+      val response = musicApi.searchForMusic(
         type = getQueryTypesForMusic(),
         searchQuery = searchQuery, offset = offset,
         limit = limit,
         auth = getAuthTokenConstruct(tokenRes.data.accessToken)
       )
-      return Resource.Success(Unit)
+      if (response.isSuccessful) {
+        return Resource.Success(response.body())
+      } else {
+        return Resource.Error(response.message())
+      }
+
     } else {
       return Resource.Error("failed to fetch auth token, try again!")
       // throw API Error and give an option to user for refresh.

@@ -1,9 +1,9 @@
-package com.example.searchify.database
+package com.example.searchify.data.database
 
 import androidx.room.Entity
 
 @Entity
-data class SongEntity(
+data class ArtistEntity(
   val id: String,
   val name: String
 )

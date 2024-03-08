@@ -1,7 +1,7 @@
 package com.example.searchify.data.di
 
-import com.example.searchify.network.MusicApi
-import com.example.searchify.network.SearchApiFactory
+import com.example.searchify.data.network.MusicApi
+import com.example.searchify.data.network.SearchApiFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

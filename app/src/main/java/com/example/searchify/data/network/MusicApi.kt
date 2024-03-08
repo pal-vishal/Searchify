@@ -1,6 +1,7 @@
-package com.example.searchify.network
+package com.example.searchify.data.network
 
-import com.example.searchify.model.ServerAuthData
+import com.example.searchify.data.model.ServerAuthData
+import com.example.searchify.data.model.ServerSearchResult
 import com.example.searchify.utils.REQUEST_AUTH_ENDPOINT
 import com.example.searchify.utils.SEARCH_MUSIC_ENDPOINT
 import retrofit2.Response
@@ -15,16 +16,16 @@ interface MusicApi {
 
   @GET(SEARCH_MUSIC_ENDPOINT)
   suspend fun searchForMusic(
+    @Header("Authorization") auth: String,
     @Query("q")
     searchQuery: String,
     @Query("offset")
     offset: Int = 0,
     @Query("limit")
     limit: Int = 0,
-    @Header("Authorization") auth: String,
     @Query("type")
     type: List<String>
-  ): Response<Unit>
+  ): Response<ServerSearchResult>
 
   @FormUrlEncoded
   @POST(REQUEST_AUTH_ENDPOINT)
