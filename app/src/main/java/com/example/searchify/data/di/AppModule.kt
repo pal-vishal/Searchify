@@ -15,5 +15,6 @@ object AppModule {
   @Provides
   @Singleton
   fun provideMusicSearchApi(): MusicApi = SearchApiFactory.makeMusicApi()
+
 }
 

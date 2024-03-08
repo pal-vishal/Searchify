@@ -5,7 +5,7 @@ import com.example.searchify.utils.Resource
 
 interface MusicRepository {
 
-  suspend fun getSearchResult(searchQuery: String, offset: Int, limit: Int)
+  suspend fun getSearchResult(searchQuery: String, offset: Int, limit: Int): Resource<Unit>
 
   suspend fun getLastSavedResult()
 
