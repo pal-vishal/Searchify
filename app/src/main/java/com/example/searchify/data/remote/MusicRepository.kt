@@ -1,7 +1,7 @@
 package com.example.searchify.data.remote
 
-import com.example.searchify.model.ServerAuthData
-import com.example.searchify.model.ServerSearchResult
+import com.example.searchify.data.model.ServerAuthData
+import com.example.searchify.data.model.ServerSearchResult
 import com.example.searchify.utils.Resource
 
 interface MusicRepository {

@@ -1,4 +1,4 @@
-package com.example.searchify.database
+package com.example.searchify.data.database
 //
 //@Database(
 //  entities = [AlbumEntity::class, ArtistEntity::class, SongEntity::class, PlaylistEntity::class],

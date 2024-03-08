@@ -1,4 +1,4 @@
-package com.example.searchify.model
+package com.example.searchify.data.model
 
 data class ServerArtists(
   val href: String,

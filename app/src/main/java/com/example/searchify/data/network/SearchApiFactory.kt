@@ -1,4 +1,4 @@
-package com.example.searchify.network
+package com.example.searchify.data.network
 
 import android.util.Log
 import com.example.searchify.utils.BASE_URL

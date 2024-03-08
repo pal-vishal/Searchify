@@ -1,4 +1,4 @@
-package com.example.searchify.model
+package com.example.searchify.data.model
 
 import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName

@@ -1,8 +1,8 @@
 package com.example.searchify.data.remote
 
-import com.example.searchify.model.ServerAuthData
-import com.example.searchify.model.ServerSearchResult
-import com.example.searchify.network.MusicApi
+import com.example.searchify.data.model.ServerAuthData
+import com.example.searchify.data.model.ServerSearchResult
+import com.example.searchify.data.network.MusicApi
 import com.example.searchify.utils.CONTENT_TYPE_VALUE_API
 import com.example.searchify.utils.Resource
 import com.example.searchify.utils.SPOTIFY_CLIENT_ID

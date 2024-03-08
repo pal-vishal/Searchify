@@ -1,7 +1,7 @@
-package com.example.searchify.network
+package com.example.searchify.data.network
 
-import com.example.searchify.model.ServerAuthData
-import com.example.searchify.model.ServerSearchResult
+import com.example.searchify.data.model.ServerAuthData
+import com.example.searchify.data.model.ServerSearchResult
 import com.example.searchify.utils.REQUEST_AUTH_ENDPOINT
 import com.example.searchify.utils.SEARCH_MUSIC_ENDPOINT
 import retrofit2.Response
