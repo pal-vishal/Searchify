@@ -9,21 +9,30 @@ import com.example.searchify.utils.SPOTIFY_CLIENT_SECRET
 import com.example.searchify.utils.VALUE_API_GRANT_TYPE
 import com.example.searchify.utils.getAuthTokenConstruct
 import com.example.searchify.utils.getBasicAuth
+import com.example.searchify.utils.getQueryTypesForMusic
 import javax.inject.Inject
 
 class MusicDataSource @Inject constructor(
   private val musicApi: MusicApi
 ) : MusicRepository {
 
-  override suspend fun getSearchResult(searchQuery: String, offset: Int, limit: Int) {
+  override suspend fun getSearchResult(
+    searchQuery: String,
+    offset: Int,
+    limit: Int
+  ): Resource<Unit> {
     val tokenRes = fetchAccessToken()
+
     if (tokenRes is Resource.Success && tokenRes.data?.accessToken != null) {
       musicApi.searchForMusic(
-        auth = getAuthTokenConstruct(tokenRes.data.accessToken),
+        type = getQueryTypesForMusic(),
         searchQuery = searchQuery, offset = offset,
-        limit = limit
+        limit = limit,
+        auth = getAuthTokenConstruct(tokenRes.data.accessToken)
       )
+      return Resource.Success(Unit)
     } else {
+      return Resource.Error("failed to fetch auth token, try again!")
       // throw API Error and give an option to user for refresh.
     }
   }
@@ -42,9 +51,16 @@ class MusicDataSource @Inject constructor(
       return if (response.body() == null) {
         Resource.Error("Failed to extract response")
       } else {
-        response.body()?.let {
-          Resource.Success(it)
-        }
+        val data = response.body()
+
+        return Resource.Success(
+          ServerAuthData(
+            accessToken = data?.accessToken ?: "",
+            expiresIn = data?.expiresIn ?: -1,
+            data?.tokenType ?: ""
+          )
+        )
+
       }
 
     } else
