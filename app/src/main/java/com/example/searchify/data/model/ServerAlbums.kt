@@ -17,7 +17,8 @@ data class ServerAlbumDetail(
   val albumType: String,
   val artists: List<ServerArtist>,
   val images: List<ServerImage>,
-  val name: String
+  val name: String,
+  val id: String
 )
 
 data class ServerArtist(
