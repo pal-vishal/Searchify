@@ -1,6 +1,10 @@
 package com.example.searchify.utils
 
+import android.app.Activity
+import android.content.Context
 import android.util.Base64
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 
 const val SEARCH_MUSIC_ENDPOINT = "https://api.spotify.com/v1/search"
 const val REQUEST_AUTH_ENDPOINT = "https://accounts.spotify.com/api/token"
@@ -25,4 +29,16 @@ fun getAuthTokenConstruct(authToken: String): String {
 
 fun getQueryTypesForMusic(): List<String> {
   return listOf("album", "artist", "playlist", "track")
+}
+
+fun Context.hideKeyboard(view: View) {
+  val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+  inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+}
+
+fun Context.showKeyboard(view: View) {
+  if (view.requestFocus()) {
+    val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+  }
 }

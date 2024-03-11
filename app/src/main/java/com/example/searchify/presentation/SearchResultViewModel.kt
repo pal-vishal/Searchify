@@ -1,5 +1,6 @@
 package com.example.searchify.presentation
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,14 +13,18 @@ import com.example.searchify.data.model.ServerTrackDetail
 import com.example.searchify.data.remote.MusicRepository
 import com.example.searchify.utils.DEFAULT_QUERY
 import com.example.searchify.utils.FilterTypes
+import com.example.searchify.utils.NetworkChecker
 import com.example.searchify.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchResultViewModel @Inject constructor(
-  private val repository: MusicRepository
+  private val repository: MusicRepository,
+  @ApplicationContext private val context: Context
 ) : ViewModel() {
 
   val albums: MutableLiveData<List<ServerAlbumDetail>> = MutableLiveData()
@@ -27,16 +32,26 @@ class SearchResultViewModel @Inject constructor(
   val playlists: MutableLiveData<List<ServerPlaylistDetail>> = MutableLiveData()
   val artists: MutableLiveData<List<ServerArtist>> = MutableLiveData()
   val fetchMusicApiRes: MutableLiveData<Resource<ServerSearchResult?>> = MutableLiveData()
+  val isInternetConnected: MutableLiveData<Boolean> = MutableLiveData()
 
   init {
-    // fetch data from local cache
-    if (false) {
-      viewModelScope.launch {
-        repository.getLastSavedResult()
+    viewModelScope.launch {
+      val result = repository.getLastSavedResult()
+      if (result.albums == null && result.artists == null && result.playlists == null && result.tracks == null) {
+        searchMusicViaAPI(DEFAULT_QUERY)
+      } else {
+        // set local data in state
       }
-    } else {
-      // hit API with default query
-      searchMusicViaAPI(DEFAULT_QUERY)
+    }
+
+    observeInternetConnection()
+  }
+
+  private fun observeInternetConnection() {
+    viewModelScope.launch {
+      NetworkChecker.isInternetConnected(context).distinctUntilChanged().collect {
+        isInternetConnected.postValue(it)
+      }
     }
   }
 

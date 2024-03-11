@@ -4,6 +4,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.SearchView
 import androidx.core.os.bundleOf
@@ -20,6 +21,8 @@ import com.example.searchify.ui.adapters.SearchAlbumItem
 import com.example.searchify.ui.adapters.SearchResultItem
 import com.example.searchify.ui.adapters.SectionHeaderItem
 import com.example.searchify.utils.FilterTypes
+import com.example.searchify.utils.Resource
+import com.example.searchify.utils.hideKeyboard
 import com.xwray.groupie.GroupieAdapter
 import com.xwray.groupie.Section
 import dagger.hilt.android.AndroidEntryPoint
@@ -72,6 +75,38 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     }
 
     binding.searchView.setOnQueryTextListener(queryListener)
+
+    binding.searchView.setOnClickListener {
+      if (searchResultViewModel.isInternetConnected.value == false) {
+        Toast.makeText(requireContext(), "Oops,You are offline right now", Toast.LENGTH_SHORT)
+          .show()
+        requireContext().hideKeyboard(binding.root)
+      } else {
+        //Show keyboard or let keyboard open for search action
+      }
+    }
+
+    searchResultViewModel.fetchMusicApiRes.observe(viewLifecycleOwner) { apiRes ->
+      when (apiRes) {
+        is Resource.Error -> {
+          Toast.makeText(
+            requireContext(),
+            "Failed to perform search, try again later",
+            Toast.LENGTH_SHORT
+          ).show()
+          binding.progressLoader.visibility = View.GONE
+        }
+
+        is Resource.Loading -> {
+          binding.progressLoader.visibility = View.VISIBLE
+
+        }
+
+        else -> {
+          binding.progressLoader.visibility = View.GONE
+        }
+      }
+    }
 
     updateTracks()
     updateArtists()
