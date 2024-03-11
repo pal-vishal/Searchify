@@ -46,10 +46,11 @@ fun ServerAlbumDetail.toAlbumEntity() = AlbumEntity(
   totalSongs = totalSongs
 )
 
-fun ServerArtist.toArtistEntity(albumId: String? = null) = ArtistEntity(
+fun ServerArtist.toArtistEntity(albumId: String? = null, songId: String? = null) = ArtistEntity(
   id = id,
   name = name,
   imageUrl = null,
   type = type,
-  albumId = albumId
+  albumId = albumId,
+  songId = songId
 )

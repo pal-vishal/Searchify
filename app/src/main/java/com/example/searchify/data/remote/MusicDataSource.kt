@@ -1,7 +1,17 @@
 package com.example.searchify.data.remote
 
+import com.example.searchify.data.database.MusicDao
+import com.example.searchify.data.database.toAlbumDetail
+import com.example.searchify.data.database.toArtistData
+import com.example.searchify.data.database.toSongDetail
+import com.example.searchify.data.model.SearchResultData
 import com.example.searchify.data.model.ServerAuthData
 import com.example.searchify.data.model.ServerSearchResult
+import com.example.searchify.data.model.toAlbumEntity
+import com.example.searchify.data.model.toArtistEntity
+import com.example.searchify.data.model.toPlayListEntity
+import com.example.searchify.data.model.toPlaylistDetail
+import com.example.searchify.data.model.toSongEntity
 import com.example.searchify.data.network.MusicApi
 import com.example.searchify.utils.CONTENT_TYPE_VALUE_API
 import com.example.searchify.utils.Resource
@@ -14,7 +24,8 @@ import com.example.searchify.utils.getQueryTypesForMusic
 import javax.inject.Inject
 
 class MusicDataSource @Inject constructor(
-  private val musicApi: MusicApi
+  private val musicApi: MusicApi,
+  private val dao: MusicDao
 ) : MusicRepository {
 
   override suspend fun getSearchResult(
@@ -33,6 +44,9 @@ class MusicDataSource @Inject constructor(
       )
       if (response.isSuccessful) {
         //todo: insert  data  to db after fetching from remote
+        response.body()?.let { result ->
+          updateSearchResultToDB(result)
+        }
         return Resource.Success(response.body())
       } else {
         return Resource.Error(response.message())
@@ -44,8 +58,13 @@ class MusicDataSource @Inject constructor(
     }
   }
 
-  override suspend fun getLastSavedResult() {
-    //TODO("Not yet implemented")
+  override suspend fun getLastSavedResult(): SearchResultData {
+    return SearchResultData(
+      albums = dao.getRecentSearchedAlbums().map { it.toAlbumDetail() },
+      artists = dao.getRecentSearchedArtists().map { it.toArtistData() },
+      tracks = dao.getRecentSearchedSongs().map { it.toSongDetail() },
+      playlists = dao.getRecentSearchedPlaylists().map { it.toPlaylistDetail() }
+    )
   }
 
   override suspend fun fetchAccessToken(): Resource<ServerAuthData> {
@@ -72,5 +91,23 @@ class MusicDataSource @Inject constructor(
 
     } else
       return Resource.Error(response.message())
+  }
+
+  private suspend fun updateSearchResultToDB(serverSearchResult: ServerSearchResult) {
+    with(serverSearchResult) {
+      dao.saveAlbumDetail(serverSearchResult.albums?.items?.map { it.toAlbumEntity() }
+        ?: emptyList())
+
+      dao.saveArtistDetail(serverSearchResult.artists?.items?.map { it.toArtistEntity() }
+        ?: emptyList())
+
+      dao.savePlaylistDetail(serverSearchResult.playlists?.items?.map { it.toPlayListEntity() }
+        ?: emptyList())
+
+      dao.saveSongDetail(serverSearchResult.tracks?.items?.map {
+        it.toSongEntity()
+      } ?: emptyList())
+    }
+
   }
 }

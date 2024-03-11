@@ -31,7 +31,9 @@ class SearchResultViewModel @Inject constructor(
   init {
     // fetch data from local cache
     if (false) {
-      // data is present locally
+      viewModelScope.launch {
+        repository.getLastSavedResult()
+      }
     } else {
       // hit API with default query
       searchMusicViaAPI(DEFAULT_QUERY)
