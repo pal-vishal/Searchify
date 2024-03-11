@@ -2,6 +2,7 @@ package com.example.searchify.data.di
 
 import android.app.Application
 import androidx.room.Room
+import com.example.searchify.data.database.MusicDao
 import com.example.searchify.data.database.MusicDatabase
 import com.example.searchify.data.network.MusicApi
 import com.example.searchify.data.network.SearchApiFactory
@@ -25,6 +26,12 @@ object AppModule {
     Room.databaseBuilder(app, MusicDatabase::class.java, "spotify_music_db")
       .fallbackToDestructiveMigration()
       .build()
+
+  @Provides
+  @Singleton
+  fun provideMusicDao(database: MusicDatabase): MusicDao {
+    return database.musicDao()
+  }
 
 }
 

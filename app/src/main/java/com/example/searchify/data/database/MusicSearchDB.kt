@@ -1,18 +1,15 @@
 package com.example.searchify.data.database
 
 import android.content.Context
-import androidx.databinding.adapters.Converters
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
 import kotlinx.coroutines.InternalCoroutinesApi
 
 @Database(
   entities = [AlbumEntity::class, ArtistEntity::class, SongEntity::class, PlaylistEntity::class],
   version = 1
 )
-@TypeConverters(Converters::class)
 abstract class MusicDatabase : RoomDatabase() {
 
   abstract fun musicDao(): MusicDao
