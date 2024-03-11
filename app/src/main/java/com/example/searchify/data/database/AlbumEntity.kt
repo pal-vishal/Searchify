@@ -4,10 +4,12 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity(tableName = "album")
 data class AlbumEntity(
   @PrimaryKey val id: String,
   val name: String,
   @ColumnInfo("image_url")
-  val imageUrl: String
+  val imageUrl: String?,
+  @ColumnInfo("total_songs")
+  val totalSongs: Long
 )
