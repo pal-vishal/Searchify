@@ -1,3 +1,8 @@
 <resources>
   <string name="app_name">Searchify</string>
+
+  <string name="section_title_tracks">Tracks</string>
+  <string name="section_title_artists">Artists</string>
+  <string name="section_title_playlists">Playlists</string>
+  <string name="section_title_albums">Albums</string>
 </resources>

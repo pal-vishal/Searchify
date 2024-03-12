@@ -1,5 +1,6 @@
 package com.example.searchify.data.remote
 
+import com.example.searchify.data.model.SearchResultData
 import com.example.searchify.data.model.ServerAuthData
 import com.example.searchify.data.model.ServerSearchResult
 import com.example.searchify.utils.Resource
@@ -12,7 +13,7 @@ interface MusicRepository {
     limit: Int
   ): Resource<ServerSearchResult?>
 
-  suspend fun getLastSavedResult()
+  suspend fun getLastSavedResult(): SearchResultData
 
   suspend fun fetchAccessToken(): Resource<ServerAuthData>
 }
